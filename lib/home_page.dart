@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:cat_dog_classifier/detector.dart';
 import 'package:cat_dog_classifier/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,9 +24,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     detector = Detector();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      detector.detectorInit();
-    });
   }
 
   @override
@@ -137,18 +132,13 @@ class _HomePageState extends State<HomePage> {
 
   detectImage() async {
     isLoading = true;
-    setState(() {});
-    final classes = ["Cat", "Dog"];
-    InputImage inputImage = InputImage.fromFilePath(
-      selectedImage!.path,
+
+    results = await detector.predict(
+      File(
+        selectedImage!.path,
+      ),
     );
 
-    List result = await detector.detectImage(inputImage);
-
-    for (var element in result) {
-      results +=
-          "${element.index}  ${element.label} Class: ${classes[element.index]} Confidence: %${100 * element.confidence} \n";
-    }
     isLoading = false;
     setState(() {});
   }
