@@ -13,10 +13,16 @@ class Detector {
   late String _text;
 
   Future detectorInit() async {
-    _modelPath = await _getModel('assets/model_metadata.tflite');
+    _modelPath = await _getModel(
+      'assets/model_metadata.tflite',
+    );
     debugPrint(_modelPath);
-    _options = LocalLabelerOptions(modelPath: _modelPath);
-    _imageLabeler = ImageLabeler(options: _options);
+    _options = LocalLabelerOptions(
+      modelPath: _modelPath,
+    );
+    _imageLabeler = ImageLabeler(
+      options: _options,
+    );
   }
 
   Future<String> _getModel(String assetPath) async {
@@ -24,12 +30,26 @@ class Detector {
       return 'flutter_assets/$assetPath';
     }
     final path = '${(await getApplicationSupportDirectory()).path}/$assetPath';
-    await Directory(dirname(path)).create(recursive: true);
-    final file = File(path);
+    await Directory(
+      dirname(
+        path,
+      ),
+    ).create(
+      recursive: true,
+    );
+    final file = File(
+      path,
+    );
     if (!await file.exists()) {
-      final byteData = await rootBundle.load(assetPath);
-      await file.writeAsBytes(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+      final byteData = await rootBundle.load(
+        assetPath,
+      );
+      await file.writeAsBytes(
+        byteData.buffer.asUint8List(
+          byteData.offsetInBytes,
+          byteData.lengthInBytes,
+        ),
+      );
     }
     return file.path;
   }
@@ -37,7 +57,7 @@ class Detector {
   Future<List> detectImage(InputImage inputImage) async {
     final List<ImageLabel> labels =
         await _imageLabeler.processImage(inputImage);
-    print(labels);
+
     return labels;
   }
 }

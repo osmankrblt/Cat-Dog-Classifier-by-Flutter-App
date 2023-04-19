@@ -94,7 +94,9 @@ class _HomePageState extends State<HomePage> {
                     await pickImage(
                       ImageSource.gallery,
                     );
-                    await detectImage();
+                    if (selectedImage != null) {
+                      await detectImage();
+                    }
                   },
                 ),
                 SizedBox(
@@ -110,7 +112,9 @@ class _HomePageState extends State<HomePage> {
                     await pickImage(
                       ImageSource.camera,
                     );
-                    await detectImage();
+                    if (selectedImage != null) {
+                      await detectImage();
+                    }
                   },
                 ),
               ],
@@ -124,7 +128,9 @@ class _HomePageState extends State<HomePage> {
   pickImage(source) async {
     final ImagePicker picker = ImagePicker();
 
-    selectedImage = await picker.pickImage(source: source);
+    selectedImage = await picker.pickImage(
+      source: source,
+    );
 
     setState(() {});
   }
@@ -132,7 +138,7 @@ class _HomePageState extends State<HomePage> {
   detectImage() async {
     isLoading = true;
     setState(() {});
-    final classes = ["Dog", "Cat"];
+    final classes = ["Cat", "Dog"];
     InputImage inputImage = InputImage.fromFilePath(
       selectedImage!.path,
     );
@@ -141,7 +147,7 @@ class _HomePageState extends State<HomePage> {
 
     for (var element in result) {
       results +=
-          "  Class: ${classes[element.index]} Confidence: ${element.confidence.toStringAsFixed(2)} \n";
+          "${element.index}  ${element.label} Class: ${classes[element.index]} Confidence: %${100 * element.confidence} \n";
     }
     isLoading = false;
     setState(() {});
